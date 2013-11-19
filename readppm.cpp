@@ -15,7 +15,7 @@
  * Using this routine is not mandatory.  It is intended to help you in case
  * you wish to use .ppm files as an Additional Feature.
  *
- * Group Members: <FILL IN>
+ * Group Members: Michael Madden
  */
 
 #ifdef _WIN32
