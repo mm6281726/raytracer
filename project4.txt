@@ -3,12 +3,13 @@ Project 4 Individual Written Questions
 Name: Michael Madden
 Email Address: m.adamsmadden@gmail.com
 
-1.
+1. a) Increasing the window size will require an increase in computation time because an arbitrary amount of rays are traced for each pixel and the bigger the window, the greater the number of pixels.
+   b) If objects are larger in size then there are more opportunities for rays to intersect objects which will require more computations and therefore take longer.
+   c) With more objects there are more interactions between rays and the objects so more computations will be required, increasing the computation time.
+
+2. I believe transparency and reflection are easier and more efficient to compute with a ray tracer because the require light interactions between multiple objects. If two things reflect each other, then there is potentially in an infinite amount of reflections as one reflection reflects the other reflection.  Transparency is similar because it requires blending the colors of multiple objects.  Shadows are easier to do in the openGL pipeline because this just requires knowing where a light is and where it hits an object so that anything within a certain radius will be cast in shadow. 
+
+3. Dividing up the scene into a 3D lattice will aid in raytracing by increasing the speed of detecting an intersection between a ray and a shape.  If ray is in this area of lattice and shape is in this area, then they will intersect.
 
 
-2.
-
-
-3.
-
-
+4. 
