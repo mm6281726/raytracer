@@ -60,13 +60,15 @@ color* makeColor(GLfloat r, GLfloat g, GLfloat b){
   return(c);
 }
 
-light* makeLight(GLfloat r, GLfloat g, GLfloat b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z){
+light* makeLight(GLfloat a_r, GLfloat a_g, GLfloat a_b, GLfloat d_r, GLfloat d_g, GLfloat d_b, GLfloat s_r, GLfloat s_g, GLfloat s_b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z){
   light* l;
   /* allocate memory */
   l = (light*) malloc(sizeof(light));
 
   /* put stuff in it */
-  l->c = makeColor(r, g, b);   /* center */
+  l->ambient_color = makeColor(a_r, a_g, a_b);   /* ambient */
+  l->diffuse_color = makeColor(d_r, d_g, d_b);   /* diffuse */
+  l->specular_color = makeColor(s_r, s_g, s_b);   /* specular */
   l->i = intensity;   /* radius */
   l->p = makePoint(x, y, z);   /* material */
   return(l);

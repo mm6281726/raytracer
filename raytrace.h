@@ -53,7 +53,9 @@ typedef struct sphere {
 } sphere;
 
 typedef struct light {
-  color* c;
+  color* ambient_color;
+  color* diffuse_color;
+  color* specular_color;
   GLfloat i;
   vector* p;
 } light;
@@ -63,7 +65,7 @@ void traceRay(ray*, color*, int);
 
 /* functions in geometry.cpp */
 color* makeColor(GLfloat r, GLfloat g, GLfloat b);
-light* makeLight(GLfloat r, GLfloat g, GLfloat b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z);
+light* makeLight(GLfloat a_r, GLfloat a_g, GLfloat a_b, GLfloat d_r, GLfloat d_g, GLfloat d_b, GLfloat s_r, GLfloat s_g, GLfloat s_b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z);
 
 sphere* makeSphere(GLfloat, GLfloat, GLfloat, GLfloat);
 point* makePoint(GLfloat, GLfloat, GLfloat);

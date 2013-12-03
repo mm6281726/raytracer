@@ -21,15 +21,18 @@ void initScene(void);
 void initCamera (int, int);
 void display(void);
 void init(int, int);
+void myKeyHandler(unsigned char ch, int x, int y);
 void traceRay(ray*,color*);
 void drawScene(void);
 void firstHit(ray*,point*,vector*,material**);
 
 /* local data */
 
-/* the scene: so far, just one sphere */
+/* the scene: so far, spheres */
 sphere* s1;
-light* l1;
+
+//lights
+light* light1;
 
 /* the viewing parameters: */
 point* viewpoint;
@@ -49,6 +52,7 @@ int main (int argc, char** argv) {
   glutSetWindow(win);
   init(width,height);
   glutDisplayFunc(display);
+  glutKeyboardFunc(myKeyHandler);
   glutMainLoop();
   return 0;
 }
@@ -79,13 +83,26 @@ void display() {
 void initScene () {
   s1 = makeSphere(0.0,0.0,-2.0,0.25);
   s1->m = makeMaterial(1.0,0.1,0.15,0.3);
-  l1 = makeLight(1.0, 0.0, 0.0, 50.0, 0.0, 50.0, 0.0);
+  light1 = makeLight(0.4f, 0.4f, 0.4f, 0.8f, 0.8f, 0.8f, 0.7f, 0.7f, 0.7f, 1.0, 0.0, 10.0, 0.0);
 }
 
 void initCamera (int w, int h) {
   viewpoint = makePoint(0.0,0.0,0.0);
   pnear = 1.0;
   fovx = PI/6;
+}
+
+void myKeyHandler(unsigned char ch, int x, int y){
+  switch(ch){
+    case 'q' :
+      exit(0);
+      break;
+
+    default : 
+      return;
+  }
+  glutPostRedisplay();
+  return;
 }
 
 void drawScene () {
@@ -145,9 +162,9 @@ void traceRay(ray* r, color* c, int d) {
   if (p.w != 0.0) {
     shade(&p,&n,m,r->dir,c,d);  /* do the lighting calculations */
   } else {             /* nothing was hit */
-    c->r = 0.0;
-    c->g = 0.0;
-    c->b = 0.0;
+    c->r = light1->ambient_color->r;
+    c->g = light1->ambient_color->g;
+    c->b = light1->ambient_color->b;
   }
 }
 
