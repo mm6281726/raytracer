@@ -29,6 +29,7 @@ void firstHit(ray*,point*,vector*,material**);
 
 /* the scene: so far, just one sphere */
 sphere* s1;
+light* l1;
 
 /* the viewing parameters: */
 point* viewpoint;
@@ -78,6 +79,7 @@ void display() {
 void initScene () {
   s1 = makeSphere(0.0,0.0,-2.0,0.25);
   s1->m = makeMaterial(1.0,0.1,0.15,0.3);
+  l1 = makeLight(1.0, 0.0, 0.0, 50.0, 0.0, 50.0, 0.0);
 }
 
 void initCamera (int w, int h) {

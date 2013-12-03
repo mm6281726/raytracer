@@ -47,3 +47,27 @@ void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
 
 }
 
+
+color* makeColor(GLfloat r, GLfloat g, GLfloat b){
+  color* c;
+  /* allocate memory */
+  c = (color*) malloc(sizeof(color));
+
+  /* put stuff in it */
+  c->r = r;   /* center */
+  c->g = g;   /* radius */
+  c->b = b;   /* material */
+  return(c);
+}
+
+light* makeLight(GLfloat r, GLfloat g, GLfloat b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z){
+  light* l;
+  /* allocate memory */
+  l = (light*) malloc(sizeof(light));
+
+  /* put stuff in it */
+  l->c = makeColor(r, g, b);   /* center */
+  l->i = intensity;   /* radius */
+  l->p = makePoint(x, y, z);   /* material */
+  return(l);
+}

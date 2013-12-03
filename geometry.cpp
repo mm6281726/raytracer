@@ -58,7 +58,7 @@ void calculateDirection(point* p, point* q, point* v) {
 
 /* given a vector, sets its contents to unit length */
 void normalize(vector* v) {
-	GLfloat length = sqrt((v->x * v->x) + (v->y * v->y) + (v->z * v->z)));
+	GLfloat length = sqrt((v->x * v->x) + (v->y * v->y) + (v->z * v->z));
 
   v->x = v->x/length;
   v->y = v->y/length;
@@ -72,7 +72,6 @@ void findPointOnRay(ray* r,double t,point* p) {
   p->z = r->start->z + t * r->dir->z;
   p->w = 1.0;
 }
-
 
 /* SPHERES */
 

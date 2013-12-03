@@ -52,10 +52,19 @@ typedef struct sphere {
   material* m;
 } sphere;
 
+typedef struct light {
+  color* c;
+  GLfloat i;
+  vector* p;
+} light;
+
 /* functions in raytrace.cpp */
 void traceRay(ray*, color*, int);
 
 /* functions in geometry.cpp */
+color* makeColor(GLfloat r, GLfloat g, GLfloat b);
+light* makeLight(GLfloat r, GLfloat g, GLfloat b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z);
+
 sphere* makeSphere(GLfloat, GLfloat, GLfloat, GLfloat);
 point* makePoint(GLfloat, GLfloat, GLfloat);
 point* copyPoint(point *);
