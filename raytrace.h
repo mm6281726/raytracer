@@ -36,7 +36,10 @@ typedef struct material {
   GLfloat g;
   GLfloat b; 
   /* ambient reflectivity */
-  GLfloat amb;
+  GLfloat ka;
+  GLfloat kd;
+  GLfloat ks;
+  GLfloat s;
 } material;
 
 typedef struct color {
@@ -53,9 +56,6 @@ typedef struct sphere {
 } sphere;
 
 typedef struct light {
-  color* ambient_color;
-  color* diffuse_color;
-  color* specular_color;
   GLfloat i;
   vector* p;
 } light;
@@ -67,8 +67,7 @@ void traceRay(ray*, color*, int);
 
 /* functions in geometry.cpp */
 color* makeColor(GLfloat r, GLfloat g, GLfloat b);
-light* makeLight(GLfloat a_r, GLfloat a_g, GLfloat a_b, GLfloat d_r, GLfloat d_g, GLfloat d_b, GLfloat s_r, GLfloat s_g, GLfloat s_b, GLfloat intensity, GLfloat x, GLfloat y, GLfloat z);
-
+light* makeLight(GLfloat intensity, GLfloat x, GLfloat y, GLfloat z);
 sphere* makeSphere(GLfloat, GLfloat, GLfloat, GLfloat);
 point* makePoint(GLfloat, GLfloat, GLfloat);
 point* copyPoint(point *);
@@ -79,7 +78,7 @@ int raySphereIntersect(ray*,sphere*,double*);
 void findSphereNormal(sphere*,point*,vector*);
 
 /* functions in light.cpp */
-material* makeMaterial(GLfloat, GLfloat, GLfloat, GLfloat);
+material* makeMaterial(GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat);
 void shade(point*,vector*,material*,vector*,color*,int);
 
 /* global variables */
