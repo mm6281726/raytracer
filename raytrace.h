@@ -55,6 +55,13 @@ typedef struct sphere {
   material* m;
 } sphere;
 
+typedef struct cylinder {
+  point* c;  /* center */
+  GLfloat r;  /* radius */
+  GLfloat h;  //height
+  material* m;
+} cylinder;
+
 typedef struct light {
   GLfloat i;
   vector* p;
@@ -70,6 +77,7 @@ void traceRay(ray*, color*, int);
 color* makeColor(GLfloat r, GLfloat g, GLfloat b);
 light* makeLight(GLfloat intensity, GLfloat x, GLfloat y, GLfloat z);
 sphere* makeSphere(GLfloat, GLfloat, GLfloat, GLfloat);
+cylinder* makeCylinder(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat h);
 point* makePoint(GLfloat, GLfloat, GLfloat);
 point* copyPoint(point *);
 void freePoint(point *);

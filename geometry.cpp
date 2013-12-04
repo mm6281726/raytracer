@@ -87,6 +87,21 @@ sphere* makeSphere(GLfloat x, GLfloat y, GLfloat z, GLfloat r) {
   return(s);
 }
 
+/* Cylinder */
+
+cylinder* makeCylinder(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat h) {
+  cylinder* c;
+  /* allocate memory */
+  c = (cylinder*) malloc(sizeof(cylinder));
+
+  /* put stuff in it */
+  c->c = makePoint(x,y,z);   /* center */
+  c->r = r;   /* radius */
+  c->h; //height
+  c->m = NULL;   /* material */
+  return(c);
+}
+
 /* returns TRUE if ray r hits sphere s, with parameter value in t */
 int raySphereIntersect(ray* r,sphere* s,double* t) {
   point p;   /* start of transformed ray */
