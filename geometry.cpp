@@ -97,7 +97,7 @@ cylinder* makeCylinder(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat h) {
   /* put stuff in it */
   c->c = makePoint(x,y,z);   /* center */
   c->r = r;   /* radius */
-  c->h; //height
+  c->h = h; //height
   c->m = NULL;   /* material */
   return(c);
 }
