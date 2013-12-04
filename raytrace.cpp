@@ -82,8 +82,8 @@ void display() {
 
 void initScene () {
   s1 = makeSphere(0.0,0.0,-2.0,0.25);
-  s1->m = makeMaterial(1.0, 0.1, 0.15, 0.3, 0.5, 0.2, 50);
-  light1 = makeLight(0.5, 0.0, 10.0, 0.0);
+  s1->m = makeMaterial(1.0, 0.1, 0.15, 0.3, 0.5, 0.2, 20);
+  light1 = makeLight(0.2, 10.0, 10.0, 0.0);
 }
 
 void initCamera (int w, int h) {
