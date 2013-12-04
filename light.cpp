@@ -76,13 +76,20 @@ void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
   c->g += id.g;
   c->b += id.b;
 
-  // color is;
-  // vector r;
-  // vector v;
-  // specularReflection(light1, m, &r, &v, &is);
-  // c->r += is.r;
-  // c->g += is.g;
-  // c->b += is.b;
+  color is;   //specular color
+  vector r;   //reflection vector
+  vector v;   //viewing vector
+  GLfloat dp = dotProduct(n, &l);
+  r.x =  2 * dp * n->x - l.x; 
+  r.y =  2 * dp * n->y - l.y; 
+  r.z =  2 * dp * n->z - l.z;
+  v.x = 0.0 - p->x; 
+  v.y = 0.0 - p->y; 
+  v.z = 0.0 - p->z;
+  specularReflection(light1, m, &r, &v, &is);
+  c->r += is.r;
+  c->g += is.g;
+  c->b += is.b;
   
   /* clamp color values to 1.0 */
   if (c->r > 1.0) c->r = 1.0;
