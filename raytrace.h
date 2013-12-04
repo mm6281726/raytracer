@@ -60,6 +60,8 @@ typedef struct light {
   vector* p;
 } light;
 
+extern light* light1;
+
 /* functions in raytrace.cpp */
 void traceRay(ray*, color*, int);
 

@@ -39,9 +39,12 @@ void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
   if(d == 0){
 
   }else{
-    c->r = m->amb * m->r;
-    c->g = m->amb * m->g;
-    c->b = m->amb * m->b;
+    // c->r = m->amb * m->r * light1->ambient_color->r;
+    // c->g = m->amb * m->g * light1->ambient_color->g;
+    // c->b = m->amb * m->b * light1->ambient_color->b;
+    c->r = m->amb * m->r * light1->ambient_color->r + light1->diffuse_color->r * 1 * m->r * fmax(1.0, 0.0);
+    c->g = m->amb * m->g * light1->ambient_color->g + light1->diffuse_color->r * 1 * m->g * fmax(1.0, 0.0);
+    c->b = m->amb * m->b * light1->ambient_color->b + light1->diffuse_color->r * 1 * m->b * fmax(1.0, 0.0);
   }
   
   /* clamp color values to 1.0 */
