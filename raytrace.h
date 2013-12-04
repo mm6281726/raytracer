@@ -85,6 +85,8 @@ void calculateDirection(point*,point*,point*);
 void findPointOnRay(ray*,double,point*);
 int raySphereIntersect(ray*,sphere*,double*);
 void findSphereNormal(sphere*,point*,vector*);
+int rayCylinderIntersect(ray*,cylinder*,double*);
+void findCylinderNormal(cylinder*,point*,vector*);
 
 /* functions in light.cpp */
 material* makeMaterial(GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat, GLfloat);

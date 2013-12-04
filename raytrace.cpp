@@ -30,6 +30,7 @@ void firstHit(ray*,point*,vector*,material**);
 
 /* the scene: so far, spheres */
 sphere* s1;
+cylinder* s2;
 
 //lights
 light* light1;
@@ -82,8 +83,10 @@ void display() {
 }
 
 void initScene () {
-  s1 = makeSphere(0.0,0.0,-2.0,0.25);
+  s1 = makeSphere(-0.25,0.0,-2.0,0.25);
   s1->m = makeMaterial(1.0, 0.1, 0.15, 0.3, 0.5, 0.15, 20);
+  s2 = makeCylinder(0.25,0.0,-2.0,0.25, 1.0);
+  s2->m = makeMaterial(0.15, 0.1, 1.0, 0.3, 0.5, 0.15, 20);
   light1 = makeLight(0.2, 10.0, 10.0, 10.0);
   light2 = makeLight(0.1, -10, 5, 5);
 }
@@ -176,13 +179,20 @@ void traceRay(ray* r, color* c, int d) {
    material m. If no hit, returns an infinite point (p->w = 0.0) */
 void firstHit(ray* r, point* p, vector* n, material* *m) {
   double t = 0;     /* parameter value at first hit */
-  int hit = FALSE;
+  int hit1 = FALSE;
+  int hit2 = FALSE;
   
-  hit = raySphereIntersect(r,s1,&t);
-  if (hit) {
+  hit1 = raySphereIntersect(r,s1,&t);
+  if(!hit1)
+    hit2 = rayCylinderIntersect(r,s2,&t);
+  if (hit1) {
     *m = s1->m;
     findPointOnRay(r,t,p);
     findSphereNormal(s1,p,n);
+  }else if(hit2){
+    *m = s2->m;
+    findPointOnRay(r,t,p);
+    findCylinderNormal(s2,p,n);
   } else {
     /* indicates no hit */
     p->w = 0.0;

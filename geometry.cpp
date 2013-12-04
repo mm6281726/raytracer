@@ -149,4 +149,49 @@ void findSphereNormal(sphere* s, point* p, vector* n) {
   n->w = 0.0;
 }
 
+/* returns TRUE if ray r hits cylinder s, with parameter value in t */
+int rayCylinderIntersect(ray* r, cylinder* s, double* t) {
+  point p;   /* start of transformed ray */
+  double a,b,c;  /* coefficients of quadratic equation */
+  double D;    /* discriminant */
+  point* v;
+  
+  /* transform ray so that cylinder center is at origin */
+  /* don't use matrix, just translate! */
+  p.x = r->start->x - s->c->x;
+  p.y = r->start->y - s->c->y;
+  p.z = r->start->z - s->c->z;
+  v = r->dir; /* point to direction vector */
 
+
+  a = v->x * v->x  +  v->y * v->y  +  v->z * v->z;
+  b = 2*( v->x * p.x  +  v->y * p.y  +  v->z * p.z);
+  c = p.x * p.x + p.y * p.y + p.z * p.z - s->r * s->r;
+
+  D = b * b - 4 * a * c;
+  
+  if (D < 0) {  /* no intersection */
+    return (FALSE);
+  }
+  else {
+    D = sqrt(D);
+    /* First check the root with the lower value of t: */
+    /* this one, since D is positive */
+    *t = (-b - D) / (2*a);
+    /* ignore roots which are less than zero (behind viewpoint) */
+    if (*t < 0) {
+      *t = (-b + D) / (2*a);
+    }
+    if (*t < 0) { return(FALSE); }
+    else return(TRUE);
+  }
+}
+
+/* normal vector of s at p is returned in n */
+/* note: dividing by radius normalizes */
+void findCylinderNormal(cylinder* c, point* p, vector* n) {
+  n->x = (p->x - c->c->x) / c->r;  
+  n->y = p->y;
+  n->z = (p->z - c->c->z) / c->r;
+  n->w = 0.0;
+}
