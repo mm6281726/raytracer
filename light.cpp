@@ -67,11 +67,21 @@ void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
   c->b = m->ka * m->b;
 
   color id;  //diffusion color
-  vector l;  //light vector
-  l.x = light1->p->x - p->x; 
-  l.y = light1->p->y - p->y; 
-  l.z = light1->p->z - p->z;
-  diffuseReflection(light1, m, n, &l, &id);
+  vector l1;  //light1 vector
+  vector l2;  //light2 vector
+  l1.x = light1->p->x - p->x; 
+  l1.y = light1->p->y - p->y; 
+  l1.z = light1->p->z - p->z;
+  l2.x = light2->p->x - p->x; 
+  l2.y = light2->p->y - p->y; 
+  l2.z = light2->p->z - p->z;
+  //light1
+  diffuseReflection(light1, m, n, &l1, &id);
+  c->r += id.r;
+  c->g += id.g;
+  c->b += id.b;
+  //light2
+  diffuseReflection(light2, m, n, &l2, &id);
   c->r += id.r;
   c->g += id.g;
   c->b += id.b;
@@ -79,14 +89,27 @@ void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
   color is;   //specular color
   vector r;   //reflection vector
   vector v;   //viewing vector
-  GLfloat dp = dotProduct(n, &l);
-  r.x =  2 * dp * n->x - l.x; 
-  r.y =  2 * dp * n->y - l.y; 
-  r.z =  2 * dp * n->z - l.z;
+  //light1
+  GLfloat dp = dotProduct(n, &l1);
+  r.x =  2 * dp * n->x - l1.x; 
+  r.y =  2 * dp * n->y - l1.y; 
+  r.z =  2 * dp * n->z - l1.z;
   v.x = 0.0 - p->x; 
   v.y = 0.0 - p->y; 
   v.z = 0.0 - p->z;
   specularReflection(light1, m, &r, &v, &is);
+  c->r += is.r;
+  c->g += is.g;
+  c->b += is.b;
+  //light2
+  dp = dotProduct(n, &l2);
+  r.x =  2 * dp * n->x - l2.x; 
+  r.y =  2 * dp * n->y - l2.y; 
+  r.z =  2 * dp * n->z - l2.z;
+  v.x = 0.0 - p->x; 
+  v.y = 0.0 - p->y; 
+  v.z = 0.0 - p->z;
+  specularReflection(light2, m, &r, &v, &is);
   c->r += is.r;
   c->g += is.g;
   c->b += is.b;

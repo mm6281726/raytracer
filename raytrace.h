@@ -61,6 +61,7 @@ typedef struct light {
 } light;
 
 extern light* light1;
+extern light* light2;
 
 /* functions in raytrace.cpp */
 void traceRay(ray*, color*, int);
