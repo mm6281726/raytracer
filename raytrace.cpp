@@ -25,6 +25,9 @@ void myKeyHandler(unsigned char ch, int x, int y);
 void traceRay(ray*,color*);
 void drawScene(void);
 void firstHit(ray*,point*,vector*,material**);
+GLfloat dotProduct(vector* n, vector* l);
+void diffuseReflection(light* il, vector* n, vector* l, color* id);
+void specularReflection(light* il, GLfloat ks, vector* r, vector* v, GLfloat* n, color* is);
 
 /* local data */
 
@@ -142,7 +145,7 @@ void drawScene () {
       calculateDirection(viewpoint,&worldPix,&direction);
 
       /* trace the ray! */
-      traceRay(&r,&c,0);
+      traceRay(&r,&c,1);
       /* write the pixel! */
       drawPixel(i,j,c.r,c.g,c.b);
     }
@@ -162,9 +165,9 @@ void traceRay(ray* r, color* c, int d) {
   if (p.w != 0.0) {
     shade(&p,&n,m,r->dir,c,d);  /* do the lighting calculations */
   } else {             /* nothing was hit */
-    c->r = light1->ambient_color->r;
-    c->g = light1->ambient_color->g;
-    c->b = light1->ambient_color->b;
+    c->r = 0.0f;
+    c->g = 0.0f;
+    c->b = 0.0f;
   }
 }
 
@@ -185,6 +188,26 @@ void firstHit(ray* r, point* p, vector* n, material* *m) {
     /* indicates no hit */
     p->w = 0.0;
   }
-
 }
 
+GLfloat dotProduct(vector* n, vector* l){
+  return (n->x*l->x + n->y*l->y + n->z*l->z);
+}
+
+// Id = Il * kd * max(n . L, 0)
+// Id = resulting intensity, Il = light source intensity, kd =  surface reflectance coefficient with 0<k<1, n = normal, L = light vector
+void diffuseReflection(light* il, GLfloat kd, material* m, vector* n, vector* l, color* id){
+  GLfloat dp = dotProduct(n, l);
+  id->r = il->diffuse_color->r * kd * m->r * fmax(dp, 0.0);
+  id->g = il->diffuse_color->g * kd * m->g * fmax(dp, 0.0);
+  id->b = il->diffuse_color->b * kd * m->b * fmax(dp, 0.0);
+}
+
+// Is = Il * ks * max(r . v, 0)^n
+// Is = resulting intensity, Il = light source intensity, ks =  surface reflectance coefficient with 0<k<1, r = reflection direction, v = viewing direction, n = shininess factor
+void specularReflection(light* il, GLfloat ks, vector* r, vector* v, GLfloat n, color* is){
+  GLfloat dp = dotProduct(r, v);
+  is->r = pow(il->diffuse_color->r * ks * fmax(dp, 0.0), n);
+  is->g = pow(il->diffuse_color->g * ks * fmax(dp, 0.0), n);
+  is->b = pow(il->diffuse_color->b * ks * fmax(dp, 0.0), n);
+}

@@ -36,9 +36,13 @@ material* makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat amb) {
 void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
 
   /* so far, just finds ambient component of color */
-  c->r = m->amb * m->r;
-  c->g = m->amb * m->g;
-  c->b = m->amb * m->b;
+  if(d == 0){
+
+  }else{
+    c->r = m->amb * m->r;
+    c->g = m->amb * m->g;
+    c->b = m->amb * m->b;
+  }
   
   /* clamp color values to 1.0 */
   if (c->r > 1.0) c->r = 1.0;
