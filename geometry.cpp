@@ -225,6 +225,6 @@ int rayPlaneIntersect(ray* r, plane* s, double* t) {
 
   *t = -(np) / nd;
   /* ignore roots which are less than zero (behind viewpoint) */
-  if (*t < 0) { return(FALSE); }
+  if (*t < 0 || *t > 0) { return(FALSE); }
   else return(TRUE);
 }
