@@ -12,4 +12,4 @@ Email Address: m.adamsmadden@gmail.com
 3. Dividing up the scene into a 3D lattice will aid in raytracing by increasing the speed of detecting an intersection between a ray and a shape.  If ray is in this area of lattice and shape is in this area, then they will intersect.
 
 
-4. 
+4. Currently, the algorithm creates a perspective projection because objects that are moved to the background become smaller.  In addition to this the viewer is at the origin.  If we want to switch to orthogonal view, the viewer must be infinitely far away with no "perspective" from inside the scene.  All objects that are the same size appear to be the same size no matter what they're z value.

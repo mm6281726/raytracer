@@ -15,9 +15,8 @@
 #include "common.h"
 #include "raytrace.h"
 
-
-GLfloat dotProduct(vector* n, vector* l){
-  return (n->x*l->x + n->y*l->y + n->z*l->z);
+void reflectionRay(ray* r, color* c, int d){
+  traceRay(r, c, d-1);
 }
 
 // Id = Il * kd * max(n . L, 0)
@@ -38,7 +37,7 @@ void specularReflection(light* il, material* m, vector* r, vector* v, color* is)
   is->b = pow(il->i * m->ks * fmax(dp, 0.0), m->s);
 }
 
-material* makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat ka, GLfloat kd, GLfloat ks, GLfloat s) {
+material* makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat ka, GLfloat kd, GLfloat ks, GLfloat s, GLfloat kr) {
   material* m;
   
   /* allocate memory */
@@ -51,7 +50,23 @@ material* makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat ka, GLfloat kd, 
   m->kd = kd;
   m->ks = ks;
   m->s = s;
+  m->kr = kr;
   return(m);
+}
+
+//int raySphereIntersect(ray* r,sphere* s,double* t)
+bool shadowRay(point* p, light* l){
+  double t = 0;
+  ray r;
+  vector* dir = makePoint(l->p->x - p->x, l->p->y - p->y, l->p->z - p->z);
+  p->x = p->x + 0.01 * dir->x;
+  p->y = p->y + 0.01 * dir->y;
+  p->z = p->z + 0.01 * dir->z;
+  r.start = p;
+  r.dir= dir;
+  if(raySphereIntersect(&r, s1, &t) || raySphereIntersect(&r, s2, &t) || rayCylinderIntersect(&r, c1, &t) || rayPlaneIntersect(&r, pl1, &t))
+    return true;
+  return false;
 }
 
 /* LIGHTING CALCULATIONS */
@@ -60,60 +75,55 @@ material* makeMaterial(GLfloat r, GLfloat g, GLfloat b, GLfloat ka, GLfloat kd, 
 /* color of point p with normal vector n and material m returned in c */
 /* in is the direction of the incoming ray and d is the recusive depth */
 void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
-
   /* so far, just finds ambient component of color */
   c->r = m->ka * m->r;
   c->g = m->ka * m->g;
   c->b = m->ka * m->b;
 
-  color id;  //diffusion color
-  vector l1;  //light1 vector
-  vector l2;  //light2 vector
-  l1.x = light1->p->x - p->x; 
-  l1.y = light1->p->y - p->y; 
-  l1.z = light1->p->z - p->z;
-  l2.x = light2->p->x - p->x; 
-  l2.y = light2->p->y - p->y; 
-  l2.z = light2->p->z - p->z;
-  //light1
-  diffuseReflection(light1, m, n, &l1, &id);
-  c->r += id.r;
-  c->g += id.g;
-  c->b += id.b;
-  //light2
-  diffuseReflection(light2, m, n, &l2, &id);
-  c->r += id.r;
-  c->g += id.g;
-  c->b += id.b;
+  bool inShadow;
+  for(int i = 0; i < 2; i++){
+    inShadow = shadowRay(p, lightlist[i]);
+    if(!inShadow){
+      color id;  //diffusion color
+      vector l;  //light vector
+      l.x = lightlist[i]->p->x - p->x; 
+      l.y = lightlist[i]->p->y - p->y; 
+      l.z = lightlist[i]->p->z - p->z;
+      //light
+      diffuseReflection(lightlist[i], m, n, &l, &id);
+      c->r += id.r;
+      c->g += id.g;
+      c->b += id.b;
 
-  color is;   //specular color
-  vector r;   //reflection vector
-  vector v;   //viewing vector
-  //light1
-  GLfloat dp = dotProduct(n, &l1);
-  r.x =  2 * dp * n->x - l1.x; 
-  r.y =  2 * dp * n->y - l1.y; 
-  r.z =  2 * dp * n->z - l1.z;
-  v.x = 0.0 - p->x; 
-  v.y = 0.0 - p->y; 
-  v.z = 0.0 - p->z;
-  specularReflection(light1, m, &r, &v, &is);
-  c->r += is.r;
-  c->g += is.g;
-  c->b += is.b;
-  //light2
-  dp = dotProduct(n, &l2);
-  r.x =  2 * dp * n->x - l2.x; 
-  r.y =  2 * dp * n->y - l2.y; 
-  r.z =  2 * dp * n->z - l2.z;
-  v.x = 0.0 - p->x; 
-  v.y = 0.0 - p->y; 
-  v.z = 0.0 - p->z;
-  specularReflection(light2, m, &r, &v, &is);
-  c->r += is.r;
-  c->g += is.g;
-  c->b += is.b;
-  
+      color is;   //specular color
+      vector r;   //reflection vector
+      vector v;   //viewing vector
+      //light1
+      GLfloat dp = dotProduct(n, &l);
+      r.x =  2 * dp * n->x - l.x; 
+      r.y =  2 * dp * n->y - l.y; 
+      r.z =  2 * dp * n->z - l.z;
+      v.x = 0.0 - p->x; 
+      v.y = 0.0 - p->y; 
+      v.z = 0.0 - p->z;
+      specularReflection(lightlist[i], m, &r, &v, &is);
+      c->r += is.r;
+      c->g += is.g;
+      c->b += is.b;
+
+      if(d > 0){
+        //reflection
+        ray rr;
+        rr.start = p;
+        rr.dir = &r;
+        color reflection;
+        reflectionRay(&rr, &reflection, d);
+        c->r += reflection.r * m->kr;
+        c->g += reflection.g * m->kr;
+        c->b += reflection.b * m->kr;
+      }
+    }
+  }
   /* clamp color values to 1.0 */
   if (c->r > 1.0) c->r = 1.0;
   if (c->g > 1.0) c->g = 1.0;

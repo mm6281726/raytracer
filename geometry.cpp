@@ -15,6 +15,10 @@
 #include "common.h"
 #include "raytrace.h"
 
+GLfloat dotProduct(vector* n, vector* l){
+  return (n->x*l->x + n->y*l->y + n->z*l->z);
+}
+
 point* makePoint(GLfloat x, GLfloat y, GLfloat z) {
   point* p;
   /* allocate memory */
@@ -102,6 +106,24 @@ cylinder* makeCylinder(GLfloat x, GLfloat y, GLfloat z, GLfloat r, GLfloat h) {
   return(c);
 }
 
+/* plane */
+
+plane* makePlane(GLfloat cx, GLfloat cy, GLfloat cz, GLfloat nx, GLfloat ny, GLfloat nz) {
+  plane* p;
+  /* allocate memory */
+  p = (plane*) malloc(sizeof(plane));
+  vector n;
+  n.x = nx;
+  n.y = ny;
+  n.z = nz;
+
+  /* put stuff in it */
+  p->c = makePoint(cx,cy,cz);   /* center */
+  p->n = &n;
+  p->m = NULL;   /* material */
+  return(p);
+}
+
 /* returns TRUE if ray r hits sphere s, with parameter value in t */
 int raySphereIntersect(ray* r,sphere* s,double* t) {
   point p;   /* start of transformed ray */
@@ -164,9 +186,9 @@ int rayCylinderIntersect(ray* r, cylinder* s, double* t) {
   v = r->dir; /* point to direction vector */
 
 
-  a = v->x * v->x  +  v->y * v->y  +  v->z * v->z;
-  b = 2*( v->x * p.x  +  v->y * p.y  +  v->z * p.z);
-  c = p.x * p.x + p.y * p.y + p.z * p.z - s->r * s->r;
+  a = v->x * v->x  +  v->z * v->z;
+  b = 2*( v->x * p.x  +  v->z * p.z);
+  c = p.x * p.x + p.z * p.z - s->r * s->r;
 
   D = b * b - 4 * a * c;
   
@@ -194,4 +216,15 @@ void findCylinderNormal(cylinder* c, point* p, vector* n) {
   n->y = p->y;
   n->z = (p->z - c->c->z) / c->r;
   n->w = 0.0;
+}
+
+/* returns TRUE if ray r hits plane s, with parameter value in t */
+int rayPlaneIntersect(ray* r, plane* s, double* t) {
+  GLfloat np = dotProduct(s->n, r->start);
+  GLfloat nd = dotProduct(s->n, r->dir);
+
+  *t = -(np) / nd;
+  /* ignore roots which are less than zero (behind viewpoint) */
+  if (*t < 0) { return(FALSE); }
+  else return(TRUE);
 }
