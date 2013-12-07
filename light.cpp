@@ -80,9 +80,8 @@ void shade(point* p, vector* n, material* m, vector* in, color* c, int d) {
   c->g = m->ka * m->g;
   c->b = m->ka * m->b;
 
-  bool inShadow;
-  for(int i = 0; i < 2; i++){
-    inShadow = shadowRay(p, lightlist[i]);
+  for(int i = 0; i < 1; i++){
+    bool inShadow = shadowRay(p, lightlist[i]);
     if(!inShadow){
       color id;  //diffusion color
       vector l;  //light vector

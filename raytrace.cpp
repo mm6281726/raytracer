@@ -87,18 +87,18 @@ void display() {
 }
 
 void initScene () {
-  s1 = makeSphere(-0.25,0.0,-2.0,0.25);
+  s1 = makeSphere(-0.25,0.15,-2.0,0.25);
   s1->m = makeMaterial(1.0, 0.1, 0.15, 0.3, 0.5, 0.17, 50, 0.5);
-  s2 = makeSphere(0.0,0.0,-5.0,0.25);
-  s2->m = makeMaterial(0.2, 1.0, 0.15, 0.3, 0.5, 0.03, 20, 0.7);
+  s2 = makeSphere(0.0, -0.5,-2.0,0.4);
+  s2->m = makeMaterial(0.2, 1.0, 0.15, 0.3, 0.5, 0.25, 20, 0.7);
   spherelist[0] = s1;
   spherelist[1] = s2;
   c1 = makeCylinder(0.25, 0.0 ,- 2.0, 0.15, 0.5);
   c1->m = makeMaterial(0.15, 0.1, 1.0, 0.3, 0.5, 0.15, 20, 0.9);
-  pl1 = makePlane(0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+  pl1 = makePlane(0.0, -10.0, 0.0, 0.0, 0.0, 1.0);
   pl1->m = makeMaterial(0.15, 0.1, 1.0, 0.3, 0.5, 0.15, 20, 0.4);
   light1 = makeLight(0.2, 10.0, 10.0, 10.0);
-  light2 = makeLight(0.1, 0.0, 10.0, 2.0);
+  light2 = makeLight(0.2, 10.0, 10.0, -10.0);
   lightlist[0] = light1;
   lightlist[1] = light2;
 }
@@ -144,7 +144,7 @@ void drawScene () {
   for (i=0; i<width; i++) {
     /* Refresh the display */
     /* Comment this line out after debugging */
-    flushCanvas();
+    //flushCanvas();
 
     for (j=0; j<height; j++) {
 
@@ -202,7 +202,7 @@ void firstHit(ray* r, point* p, vector* n, material* *m) {
     if(!hit2){
       hit3 = rayCylinderIntersect(r,c1,&t);
       if(!hit3){
-      //  hit4 = rayPlaneIntersect(r, pl1, &t);
+       hit4 = rayPlaneIntersect(r, pl1, &t);
       }
     }
   }
@@ -218,10 +218,10 @@ void firstHit(ray* r, point* p, vector* n, material* *m) {
     *m = c1->m;
     findPointOnRay(r,t,p);
     findCylinderNormal(c1,p,n);
-  //} else if(hit4){
-    //*m = pl1->m;
-    //findPointOnRay(r,t,p);
-    //n = pl1->n;
+  } else if(hit4){
+    *m = pl1->m;
+    findPointOnRay(r,t,p);
+    n = pl1->n;
   }else {
     /* indicates no hit */
     p->w = 0.0;
